@@ -38,7 +38,7 @@ namespace CmsShoppingCart.Areas.Admin.Controllers
         public ActionResult AddPage(PageVM model)
         {
             //Check model state
-            if (! ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return View(model);
             }
@@ -76,11 +76,36 @@ namespace CmsShoppingCart.Areas.Admin.Controllers
                 db.Pages.Add(dto);
                 db.SaveChanges();
             }
-                //Set TempData message
-                TempData["SM"] = "You have added a new page!";
-                //Redirect
-                return RedirectToAction("AddPage");
-                    
+            //Set TempData message
+            TempData["SM"] = "You have added a new page!";
+            //Redirect
+            return RedirectToAction("AddPage");
+
+        }
+
+        // GET: Admin/Pages/EditPage/id
+        public ActionResult EditPage(int id)
+        {
+            //Declare pageVM
+            PageVM model;
+
+            using (Db db = new Db())
+            {
+                //Get the page
+                PageDTO dto = db.Pages.Find(id);
+
+                //Confirm page exists
+                if (dto == null)
+                {
+                    return Content("The page does not exist.");
+                }
+
+                //Init pageVM
+                model = new PageVM(dto);
+            }
+
+            //Return view with model
+            return View(model);
         }
     }
 }
